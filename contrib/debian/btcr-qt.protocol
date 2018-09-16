@@ -1,0 +1,11 @@
+[Protocol]
+exec=btcr-qt '%u'
+protocol=btcr
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false

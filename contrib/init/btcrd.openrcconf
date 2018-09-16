@@ -1,0 +1,33 @@
+# /etc/conf.d/btcrd: config file for /etc/init.d/btcrd
+
+# Config file location
+#BTCrD_CONFIGFILE="/etc/btcrcore/btcr.conf"
+
+# What directory to write pidfile to?  (created and owned by $BTCrD_USER)
+#BTCrD_PIDDIR="/var/run/btcrd"
+
+# What filename to give the pidfile
+#BTCrD_PIDFILE="${BTCrD_PIDDIR}/btcrd.pid"
+
+# Where to write btcrd data (be mindful that the blockchain is large)
+#BTCrD_DATADIR="/var/lib/btcrd"
+
+# User and group to own btcrd process
+#BTCrD_USER="btcrcore"
+#BTCrD_GROUP="btcrcore"
+
+# Path to btcrd executable
+#BTCrD_BIN="/usr/bin/btcrd"
+
+# Nice value to run btcrd under
+#BTCrD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BTCrD_OPTS="-disablewallet"
+
+# The timeout in seconds OpenRC will wait for btcrd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+BTCrD_SIGTERM_TIMEOUT=60

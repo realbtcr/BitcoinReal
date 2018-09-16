@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=BTCr
+Comment=BTCr P2P Cryptocurrency
+Comment[fr]=BTCr, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=BTCr, eşten eşe kriptografik sanal para birimi
+Exec=btcr-qt %u
+Terminal=false
+Type=Application
+Icon=btcr128
+MimeType=x-scheme-handler/btcr;
+Categories=Office;Finance;

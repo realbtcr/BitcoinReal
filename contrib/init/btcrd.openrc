@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/btcrcore/.btcrcore" ]; then
+	BTCrD_DEFAULT_DATADIR="/var/lib/btcrcore/.btcrcore"
+else
+	BTCrD_DEFAULT_DATADIR="/var/lib/btcrd"
+fi
+
+BTCrD_CONFIGFILE=${BTCrD_CONFIGFILE:-/etc/btcrcore/btcr.conf}
+BTCrD_PIDDIR=${BTCrD_PIDDIR:-/var/run/btcrd}
+BTCrD_PIDFILE=${BTCrD_PIDFILE:-${BTCrD_PIDDIR}/btcrd.pid}
+BTCrD_DATADIR=${BTCrD_DATADIR:-${BTCrD_DEFAULT_DATADIR}}
+BTCrD_USER=${BTCrD_USER:-${BTCr_USER:-btcrcore}}
+BTCrD_GROUP=${BTCrD_GROUP:-btcrcore}
+BTCrD_BIN=${BTCrD_BIN:-/usr/bin/btcrd}
+BTCrD_NICE=${BTCrD_NICE:-${NICELEVEL:-0}}
+BTCrD_OPTS="${BTCrD_OPTS:-${BTCr_OPTS}}"
+
+name="BTCr Core Daemon"
+description="BTCr cryptocurrency P2P network daemon"
+
+command="/usr/bin/btcrd"
+command_args="-pid=\"${BTCrD_PIDFILE}\" \
+		-conf=\"${BTCrD_CONFIGFILE}\" \
+		-datadir=\"${BTCrD_DATADIR}\" \
+		-daemon \
+		${BTCrD_OPTS}"
+
+required_files="${BTCrD_CONFIGFILE}"
+start_stop_daemon_args="-u ${BTCrD_USER} \
+			-N ${BTCrD_NICE} -w 2000"
+pidfile="${BTCrD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${BTCrD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${BTCrD_USER}:${BTCrD_GROUP}" \
+	"${BTCrD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${BTCrD_USER}:${BTCrD_GROUP}" \
+	"${BTCrD_PIDDIR}"
+
+	checkpath -f \
+	-o ${BTCrD_USER}:${BTCrD_GROUP} \
+	-m 0660 \
+	${BTCrD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${BTCrD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run btcrd."
+		eerror "The setting must appear in ${BTCrD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"BTCr Core Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

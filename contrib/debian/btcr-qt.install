@@ -1,0 +1,6 @@
+usr/local/bin/btcr-qt usr/bin
+share/pixmaps/btcr32.xpm usr/share/pixmaps
+share/pixmaps/btcr16.xpm usr/share/pixmaps
+share/pixmaps/btcr128.png usr/share/pixmaps
+debian/btcr-qt.desktop usr/share/applications
+debian/btcr-qt.protocol usr/share/kde4/services/

@@ -1,0 +1,22 @@
+[Unit]
+Description=BTCr's distributed currency daemon
+After=network.target
+
+[Service]
+User=btcrcore
+Group=btcrcore
+
+Type=forking
+PIDFile=/var/lib/btcrd/btcrd.pid
+ExecStart=/usr/bin/btcrd -daemon -pid=/var/lib/btcrd/btcrd.pid \
+-conf=/etc/btcrcore/btcr.conf -datadir=/var/lib/btcrd -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
