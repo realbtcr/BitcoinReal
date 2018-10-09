@@ -2,7 +2,7 @@ BTCr Core 0.1.2
 ===============================
 
 
-https://www.btcrproject.org
+https://www.bitcoinreal.org
 
 
 What is BTCr?
@@ -15,7 +15,7 @@ are carried out collectively by the network. BTCr Core is the name of the open
 source software which enables the use of this currency.
 
 For more information, as well as an immediately useable, binary version of
-the BTCr Core software, see https://www.btcrproject.org/.
+the BTCr Core software, see https://www.bitcoinreal.org/.
 
 
 License
